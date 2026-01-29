@@ -4,18 +4,8 @@ def checkout_logic():
     db = get_db()
     db.row_factory = None  
 
-    events = db.execute("SELECT fee FROM events").fetchall()
-
-    # Uncomment this line initially for the crash screenshot task
-    #1 / 0
-
-    total = 0
-    # for e in events:
-    #     fee = e[0]  
-    #     while fee > 0:
-    #         total += 1
-    #         fee -= 1
-    for e in events:
-        total += e[0]
+    # Compute total fee directly in SQL for efficiency
+    row = db.execute("SELECT SUM(fee) FROM events").fetchone()
+    total = row[0] or 0
 
     return total
